@@ -1,0 +1,46 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.cart-empty {
+    color: gray;
+    font-style: italic;
+}
+
+.cart-info {
+    margin-top: 15px;
+}
+
+#discount-message {
+    margin-top: 10px;
+    color: green;
+    font-weight: bold;
+}
+
+/* Card and button styles */
+.product-card {
+    display: block;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+}
+
+input[type="number"] {
+    width: 60px;
+}
+
+/* Cart styling */
+#cart {
+    margin-top: 20px;
+}
