@@ -1,3 +1,5 @@
+## https://saleh-buamud.github.io/jquery-shopping-cart/
+
 ## Technologies Used
 
 - **HTML:** Structure of the shopping cart and product display.
@@ -7,7 +9,7 @@
 - **LocalStorage:** To persist the shopping cart data between page reloads.
 - **Bootstrap:** For responsive design and styling.
 
-  --
+##
 
 ## Features
 
