@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        .cart-empty {
+            color: gray;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body class="container py-4">
+
+    <h1 class="text-center mb-4">Shopping Cart</h1>
+
+    <!-- Search bar -->
+    <div class="mb-4">
+        <input type="text" id="search-bar" class="form-control" placeholder="Search for products...">
+    </div>
+
+    <!-- Product List -->
+    <div id="products" class="row g-3">
+        <div class="col-md-4 product-card" data-name="Product 1">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Product 1</h5>
+                    <p class="card-text">$10</p>
+                    <button class="btn btn-primary w-100 add-to-cart" data-id="1" data-name="Product 1"
+                        data-price="10">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product-card" data-name="Product 2">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Product 2</h5>
+                    <p class="card-text">$15</p>
+                    <button class="btn btn-primary w-100 add-to-cart" data-id="2" data-name="Product 2"
+                        data-price="15">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 product-card" data-name="Product 3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Product 3</h5>
+                    <p class="card-text">$20</p>
+                    <button class="btn btn-primary w-100 add-to-cart" data-id="3" data-name="Product 3"
+                        data-price="20">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart -->
+    <h2 class="text-center my-4">Your Cart</h2>
+    <div id="cart" class="list-group">
+        <p class="cart-empty text-center">Your cart is empty.</p>
+    </div>
+    <div class="mt-3">
+        <h4 class="text-end">Total: $<span id="total">0</span></h4>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const cart = {}; // Initialize an empty cart
+
+            // Update the shopping cart display
+            function updateCart() {
+                const $cart = $("#cart");
+                const $total = $("#total");
+                $cart.empty(); // Clear the current cart display
+
+                let total = 0;
+
+                if (Object.keys(cart).length === 0) {
+                    // If the cart is empty, display an empty message
+                    $cart.append('<p class="cart-empty text-center">Your cart is empty.</p>');
+                    $total.text(0);
+                    return;
+                }
+
+                // Loop through cart items to display them
+                for (const id in cart) {
+                    const item = cart[id];
+                    total += item.price * item.quantity;
+
+                    // Append the item to the cart display
+                    $cart.append(`
+                        <div class="list-group-item d-flex justify-content-between align-items-center" data-id="${id}">
+                            <span>${item.name} (${item.quantity})</span>
+                            <div>
+                                <button class="btn btn-sm btn-success increase-qty" data-id="${id}">+</button>
+                                <button class="btn btn-sm btn-warning decrease-qty" data-id="${id}">-</button>
+                                <button class="btn btn-sm btn-danger remove-item" data-id="${id}">Remove</button>
+                            </div>
+                            <span>$${item.price * item.quantity}</span>
+                        </div>
+                    `);
+                }
+
+                // Update the total price
+                $total.text(total);
+            }
+
+            // Add product to the cart when the button is clicked
+            $(".add-to-cart").click(function () {
+                const id = $(this).data("id");
+                const name = $(this).data("name");
+                const price = $(this).data("price");
+
+                // Check if the product already exists in the cart
+                if (cart[id]) {
+                    cart[id].quantity += 1; // Increase quantity if product is already in the cart
+                } else {
+                    // Add the product to the cart if it's not already there
+                    cart[id] = { name, price, quantity: 1 };
+                }
+
+                updateCart(); // Update the cart display
+            });
+
+            // Increase product quantity
+            $("#cart").on("click", ".increase-qty", function () {
+                const id = $(this).data("id");
+                cart[id].quantity += 1;
+                updateCart(); // Update the cart display after increasing quantity
+            });
+
+            // Decrease product quantity
+            $("#cart").on("click", ".decrease-qty", function () {
+                const id = $(this).data("id");
+                if (cart[id].quantity > 1) {
+                    cart[id].quantity -= 1;
+                } else {
+                    delete cart[id]; // Remove the item if quantity is 1 and user clicks minus
+                }
+                updateCart(); // Update the cart display after decreasing quantity
+            });
+
+            // Remove product from cart
+            $("#cart").on("click", ".remove-item", function () {
+                const id = $(this).data("id");
+                delete cart[id]; // Remove the item from the cart
+                updateCart(); // Update the cart display after removing the item
+            });
+
+            // Search for products as the user types in the search bar
+            $("#search-bar").on("input", function () {
+                const searchQuery = $(this).val().toLowerCase();
+                $(".product-card").each(function () {
+                    const productName = $(this).data("name").toLowerCase();
+                    // Show or hide product based on the search query
+                    if (productName.includes(searchQuery)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
